@@ -127,9 +127,6 @@ public:
     // Changes whether debug information is drawn onto the map
     void setDebug(bool enabled);
 
-    // Configures the painter strata that is used for early z-culling of fragments.
-    void setStrata(float strata);
-
     void drawClippingMasks(const std::set<Source*>&);
     void drawClippingMask(const mat4& matrix, const ClipID& clip);
 
@@ -151,8 +148,7 @@ private:
     template <class Iterator>
     void renderPass(RenderPass,
                     Iterator it, Iterator end,
-                    std::size_t i, int8_t iIncrement,
-                    const float strataThickness);
+                    std::size_t i, int8_t increment);
 
     void prepareTile(const Tile& tile);
 
@@ -166,6 +162,8 @@ private:
                    std::array<float, 2> texsize,
                    SDFShader& sdfShader,
                    void (SymbolBucket::*drawSDF)(SDFShader&));
+
+    void setDepthSublayer(int n);
 
 public:
     void useProgram(uint32_t program);
@@ -204,9 +202,12 @@ private:
     uint32_t gl_program = 0;
     float gl_lineWidth = 0;
     std::array<uint16_t, 2> gl_viewport = {{ 0, 0 }};
-    float strata = 0;
     RenderPass pass = RenderPass::Opaque;
-    const float strata_epsilon = 1.0f / (1 << 16);
+
+    int numSublayers = 3;
+    int currentLayer;
+    float depthRangeSize;
+    const float depthEpsilon = 1.0f / (1 << 16);
 
 public:
     FrameHistory frameHistory;
