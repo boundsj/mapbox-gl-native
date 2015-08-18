@@ -344,4 +344,4 @@ For Android, gradle will take the value of `MAPBOX_ACCESS_TOKEN` and save it to 
 
 # Style
 
-Some styles in JSON format are included at `./styles`. See the [style spec](https://github.com/mapbox/mapbox-gl-style-spec) for more details.
+Default styles in the JSON-based [styling format](https://github.com/mapbox/mapbox-gl-style-spec) are included at `./styles` as a submodule. See the [styles project](https://github.com/mapbox/mapbox-gl-styles) to report problems or to contribute to these styles.
