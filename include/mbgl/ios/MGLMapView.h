@@ -74,6 +74,13 @@ IB_DESIGNABLE
 *   The default value of this property is `YES`. */
 @property(nonatomic, getter=isRotateEnabled) BOOL rotateEnabled;
 
+/** A Boolean value that determines whether the user may tilt the map.
+ *
+ *   This property controls only user interactions with the map. If you set the value of this property to `NO`, you may still tilt the map programmatically.
+ *
+ *   The default value of this property is `YES`. */
+@property(nonatomic, getter=isTiltEnabled) BOOL tiltEnabled;
+
 /** The compass image view shown in the upper-right when the map is rotated. */
 @property (nonatomic, readonly) UIImageView *compassView;
 

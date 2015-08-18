@@ -98,7 +98,6 @@ CLLocationDegrees MGLDegreesFromRadians(CGFloat radians)
 @property (nonatomic, getter=isDormant) BOOL dormant;
 @property (nonatomic, getter=isAnimatingGesture) BOOL animatingGesture;
 @property (nonatomic, readonly, getter=isRotationAllowed) BOOL rotationAllowed;
-
 @property (nonatomic) double pitchStart;
 
 @end
@@ -347,6 +346,7 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
     [twoFingerDrag requireGestureRecognizerToFail:twoFingerTap];
     [twoFingerDrag requireGestureRecognizerToFail:_pan];
     [self addGestureRecognizer:twoFingerDrag];
+    _tiltEnabled = YES;
 
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
     {
@@ -1333,7 +1333,7 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
 
 - (void)handleTwoFingerDragGesture:(UIPanGestureRecognizer *)twoFingerDrag
 {
-    //if ( ! self.isPerspectiveEnabled) return;
+    if ( ! self.isTiltEnabled) return;
     
     _mbglMap->cancelTransitions();
 
@@ -1483,6 +1483,11 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
 + (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingRotateEnabled
 {
     return [NSSet setWithObject:@"allowsRotating"];
+}
+
++ (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingTiltEnabled
+{
+    return [NSSet setWithObject:@"allowsTilting"];
 }
 
 - (void)setDebugActive:(BOOL)debugActive
@@ -3112,6 +3117,21 @@ class MBGLView : public mbgl::View
 - (void)setAllowsRotating:(BOOL)allowsRotating
 {
     self.rotateEnabled = allowsRotating;
+}
+
++ (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingAllowsTilting
+{
+    return [NSSet setWithObject:@"tiltEnabled"];
+}
+
+- (BOOL)allowsTilting
+{
+    return self.tiltEnabled;
+}
+
+- (void)setAllowsTilting:(BOOL)allowsTilting
+{
+    self.tiltEnabled = allowsTilting;
 }
 
 - (void)didReceiveMemoryWarning
