@@ -99,6 +99,8 @@ CLLocationDegrees MGLDegreesFromRadians(CGFloat radians)
 @property (nonatomic, getter=isAnimatingGesture) BOOL animatingGesture;
 @property (nonatomic, readonly, getter=isRotationAllowed) BOOL rotationAllowed;
 
+@property (nonatomic) double pitchStart;
+
 @end
 
 @implementation MGLMapView
@@ -337,6 +339,14 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
     [twoFingerTap requireGestureRecognizerToFail:_pinch];
     [twoFingerTap requireGestureRecognizerToFail:_rotate];
     [self addGestureRecognizer:twoFingerTap];
+    
+    UIPanGestureRecognizer *twoFingerDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleTwoFingerDragGesture:)];
+    twoFingerDrag.minimumNumberOfTouches = 2;
+    twoFingerDrag.maximumNumberOfTouches = 2;
+    twoFingerDrag.delegate = self;
+    [twoFingerDrag requireGestureRecognizerToFail:twoFingerTap];
+    [twoFingerDrag requireGestureRecognizerToFail:_pan];
+    [self addGestureRecognizer:twoFingerDrag];
 
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
     {
@@ -1319,6 +1329,67 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
 
         [self notifyMapChange:mbgl::MapChangeRegionDidChange];
     }
+}
+
+- (void)handleTwoFingerDragGesture:(UIPanGestureRecognizer *)twoFingerDrag
+{
+    //if ( ! self.isPerspectiveEnabled) return;
+    
+    _mbglMap->cancelTransitions();
+
+    CGPoint gestureTranslation = [twoFingerDrag translationInView:twoFingerDrag.view];
+    
+    if (twoFingerDrag.state == UIGestureRecognizerStateBegan)
+    {
+        //[self trackGestureEvent:MGLEventGesturePerspective forRecognizer:twoFingerDrag];
+        
+        self.pitchStart = _mbglMap->getPitch();
+
+        double pitch = fmin(self.pitchStart - (gestureTranslation.y / 2), 60);
+        
+        if (pitch > 0 && pitch < 60)
+        {
+            _mbglMap->setPitch(pitch);
+        }
+        
+    }
+    else if (twoFingerDrag.state == UIGestureRecognizerStateChanged)
+    {
+        double pitch = fmin(self.pitchStart - (gestureTranslation.y / 2), 60);
+        
+        if (pitch > 0 && pitch < 60)
+        {
+           _mbglMap->setPitch(pitch);
+        }
+    }
+    else if (twoFingerDrag.state == UIGestureRecognizerStateEnded || twoFingerDrag.state == UIGestureRecognizerStateCancelled)
+    {
+        [self unrotateIfNeededAnimated:YES];
+        //[self notifyMapChange:mbgl::MapChangeRegionDidChange];
+    }
+    
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]])
+    {
+        UIPanGestureRecognizer *panGesture = (UIPanGestureRecognizer *)gestureRecognizer;
+
+        if (panGesture.minimumNumberOfTouches == 2)
+        {
+            CGPoint velocity = [panGesture velocityInView:panGesture.view];
+            double gestureDegrees = MGLDegreesFromRadians(atan(velocity.y / velocity.x));
+            double horizontalMarginDegrees = 15.0;
+
+            // cancel if gesture angle is not 90º±15º (more or less vertical)
+            if ( ! (fabs((fabs(gestureDegrees) - 90.0)) < horizontalMarginDegrees))
+            {
+                return NO;
+            }
+        }
+    }
+    return YES;
 }
 
 - (void)handleCalloutAccessoryTapGesture:(UITapGestureRecognizer *)tap
