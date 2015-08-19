@@ -84,6 +84,7 @@ CLLocationDegrees MGLDegreesFromRadians(CGFloat radians)
 @property (nonatomic) UIPinchGestureRecognizer *pinch;
 @property (nonatomic) UIRotationGestureRecognizer *rotate;
 @property (nonatomic) UILongPressGestureRecognizer *quickZoom;
+@property (nonatomic) UIPanGestureRecognizer *twoFingerDrag;
 @property (nonatomic) NSMapTable *annotationIDsByAnnotation;
 @property (nonatomic) NS_MUTABLE_DICTIONARY_OF(NSString *, MGLAnnotationImage *) *annotationImages;
 @property (nonatomic) std::vector<uint32_t> annotationsNearbyLastTap;
@@ -339,13 +340,13 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
     [twoFingerTap requireGestureRecognizerToFail:_rotate];
     [self addGestureRecognizer:twoFingerTap];
     
-    UIPanGestureRecognizer *twoFingerDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleTwoFingerDragGesture:)];
-    twoFingerDrag.minimumNumberOfTouches = 2;
-    twoFingerDrag.maximumNumberOfTouches = 2;
-    twoFingerDrag.delegate = self;
-    [twoFingerDrag requireGestureRecognizerToFail:twoFingerTap];
-    [twoFingerDrag requireGestureRecognizerToFail:_pan];
-    [self addGestureRecognizer:twoFingerDrag];
+    _twoFingerDrag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleTwoFingerDragGesture:)];
+    _twoFingerDrag.minimumNumberOfTouches = 2;
+    _twoFingerDrag.maximumNumberOfTouches = 2;
+    _twoFingerDrag.delegate = self;
+    [_twoFingerDrag requireGestureRecognizerToFail:twoFingerTap];
+    [_twoFingerDrag requireGestureRecognizerToFail:_pan];
+    [self addGestureRecognizer:_twoFingerDrag];
     _pitchEnabled = YES;
 
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
@@ -1365,7 +1366,8 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
     else if (twoFingerDrag.state == UIGestureRecognizerStateEnded || twoFingerDrag.state == UIGestureRecognizerStateCancelled)
     {
         [self unrotateIfNeededAnimated:YES];
-        //[self notifyMapChange:mbgl::MapChangeRegionDidChange];
+
+        //[self notifyMapChange:(mbgl::MapChangeRegionDidChange)];
     }
     
 }
@@ -1697,7 +1699,7 @@ mbgl::LatLngBounds MGLLatLngBoundsFromCoordinateBounds(MGLCoordinateBounds coord
 {
     _mbglMap->setPitch(pitch);
     
-    //[self notifyMapChange:mbgl::MapChangeRegionDidChange];
+    //[self notifyMapChange:(mbgl::MapChangeRegionDidChange)];
 }
 
 - (void)resetPitch
@@ -2704,10 +2706,11 @@ CLLocationCoordinate2D MGLLocationCoordinate2DFromLatLng(mbgl::LatLng latLng)
         {
             [self updateCompass];
 
-            if (self.pan.state       == UIGestureRecognizerStateChanged ||
-                self.pinch.state     == UIGestureRecognizerStateChanged ||
-                self.rotate.state    == UIGestureRecognizerStateChanged ||
-                self.quickZoom.state == UIGestureRecognizerStateChanged) return;
+            if (self.pan.state           == UIGestureRecognizerStateChanged ||
+                self.pinch.state         == UIGestureRecognizerStateChanged ||
+                self.rotate.state        == UIGestureRecognizerStateChanged ||
+                self.quickZoom.state     == UIGestureRecognizerStateChanged ||
+                self.twoFingerDrag.state == UIGestureRecognizerStateChanged) return;
 
             if (self.isAnimatingGesture) return;
 
