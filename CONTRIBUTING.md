@@ -1,6 +1,6 @@
 # Contributing
 
-If you have a usage question for a product built on Mapbox GL (such as Mapbox Mobile), please visit https://www.mapbox.com/help/. 
+If you have a usage question for a product built on Mapbox GL (such as Mapbox Mobile toolkits like our SDKs), please visit https://www.mapbox.com/help/. 
 
 If you want to contribute code: 
 
