@@ -346,7 +346,7 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
     [twoFingerDrag requireGestureRecognizerToFail:twoFingerTap];
     [twoFingerDrag requireGestureRecognizerToFail:_pan];
     [self addGestureRecognizer:twoFingerDrag];
-    _tiltEnabled = YES;
+    _pitchEnabled = YES;
 
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
     {
@@ -1333,7 +1333,7 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
 
 - (void)handleTwoFingerDragGesture:(UIPanGestureRecognizer *)twoFingerDrag
 {
-    if ( ! self.isTiltEnabled) return;
+    if ( ! self.isPitchEnabled) return;
     
     _mbglMap->cancelTransitions();
 
@@ -1686,6 +1686,23 @@ mbgl::LatLngBounds MGLLatLngBoundsFromCoordinateBounds(MGLCoordinateBounds coord
 - (void)setDirection:(CLLocationDirection)direction
 {
     [self setDirection:direction animated:NO];
+}
+
+- (double)pitch
+{
+    return _mbglMap->getPitch();
+}
+
+- (void)setPitch:(double)pitch
+{
+    _mbglMap->setPitch(pitch);
+    
+    //[self notifyMapChange:mbgl::MapChangeRegionDidChange];
+}
+
+- (void)resetPitch
+{
+    [self setPitch:0];
 }
 
 - (CLLocationCoordinate2D)convertPoint:(CGPoint)point toCoordinateFromView:(nullable UIView *)view
@@ -3119,19 +3136,19 @@ class MBGLView : public mbgl::View
     self.rotateEnabled = allowsRotating;
 }
 
-+ (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingAllowsTilting
++ (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingAllowsPitching
 {
-    return [NSSet setWithObject:@"tiltEnabled"];
+    return [NSSet setWithObject:@"pitchEnabled"];
 }
 
-- (BOOL)allowsTilting
+- (BOOL)allowsPitching
 {
-    return self.tiltEnabled;
+    return self.pitchEnabled;
 }
 
-- (void)setAllowsTilting:(BOOL)allowsTilting
+- (void)setAllowsPitching:(BOOL)allowsPitching
 {
-    self.tiltEnabled = allowsTilting;
+    self.pitchEnabled = allowsPitching;
 }
 
 - (void)didReceiveMemoryWarning
