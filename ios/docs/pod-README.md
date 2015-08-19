@@ -1,4 +1,4 @@
-# Mapbox for iOS
+# Mapbox iOS SDK
 
 An open source OpenGL-based vector map solution for iOS with full styling capabilities and Cocoa bindings.
 

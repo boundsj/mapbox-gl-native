@@ -127,7 +127,7 @@ perl \
     /tmp/mbgl/Headers/*.h
 appledoc \
     --output ${DOCS_OUTPUT} \
-    --project-name "Mapbox for iOS ${DOCS_VERSION}" \
+    --project-name "Mapbox iOS SDK ${DOCS_VERSION}" \
     --project-company Mapbox \
     --create-html \
     --no-create-docset \
