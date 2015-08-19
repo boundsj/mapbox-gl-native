@@ -1687,7 +1687,9 @@ mbgl::LatLngBounds MGLLatLngBoundsFromCoordinateBounds(MGLCoordinateBounds coord
 
 - (void)setPitch:(double)pitch
 {
-    _mbglMap->setPitch(pitch);
+    // constrain pitch to between 0º and 60º
+    //
+    _mbglMap->setPitch(fmax(fmin(pitch, 60), 0));
     
     //[self notifyMapChange:(mbgl::MapChangeRegionDidChange)];
 }
