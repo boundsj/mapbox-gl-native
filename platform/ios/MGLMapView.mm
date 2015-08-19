@@ -1477,9 +1477,9 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
     return [NSSet setWithObject:@"allowsRotating"];
 }
 
-+ (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingTiltEnabled
++ (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingPitchEnabled
 {
-    return [NSSet setWithObject:@"allowsTilting"];
+    return [NSSet setWithObject:@"allowsPitching"];
 }
 
 - (void)setDebugActive:(BOOL)debugActive
