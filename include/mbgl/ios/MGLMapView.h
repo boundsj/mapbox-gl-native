@@ -180,7 +180,6 @@ IB_DESIGNABLE
 /** Resets the map rotation to a northern heading. */
 - (IBAction)resetNorth;
 
-
 /** The pitch of the map (measured in degrees).
  *
  *   The default value `0` shows a completely flat map. Maximum value is `60`. */
@@ -194,9 +193,6 @@ IB_DESIGNABLE
 
 /** Resets the map pitch to head-on. */
 - (IBAction)resetPitch;
-
-
-
 
 #pragma mark - Converting Map Coordinates
 
