@@ -1373,9 +1373,9 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
         {
             CGPoint velocity = [panGesture velocityInView:panGesture.view];
             double gestureAngle = MGLDegreesFromRadians(atan(velocity.y / velocity.x));
-            double horizontalToleranceDegrees = 15.0;
+            double horizontalToleranceDegrees = 20.0;
 
-            // cancel if gesture angle is not 90º±15º (more or less vertical)
+            // cancel if gesture angle is not 90º±20º (more or less vertical)
             if ( ! (fabs((fabs(gestureAngle) - 90.0)) < horizontalToleranceDegrees))
             {
                 return NO;
