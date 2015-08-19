@@ -99,7 +99,6 @@ CLLocationDegrees MGLDegreesFromRadians(CGFloat radians)
 @property (nonatomic, getter=isDormant) BOOL dormant;
 @property (nonatomic, getter=isAnimatingGesture) BOOL animatingGesture;
 @property (nonatomic, readonly, getter=isRotationAllowed) BOOL rotationAllowed;
-@property (nonatomic) double pitchStart;
 
 @end
 
@@ -1337,31 +1336,23 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
     if ( ! self.isPitchEnabled) return;
     
     _mbglMap->cancelTransitions();
-
+    
+    double currentPitch = _mbglMap->getPitch();
+    double minPitch = 0;
+    double maxPitch = 60.0;
+    double slowdown = 20.0;
+    
     CGPoint gestureTranslation = [twoFingerDrag translationInView:twoFingerDrag.view];
     
-    if (twoFingerDrag.state == UIGestureRecognizerStateBegan)
+    /*if (twoFingerDrag.state == UIGestureRecognizerStateBegan)
     {
-        //[self trackGestureEvent:MGLEventGesturePerspective forRecognizer:twoFingerDrag];
-        
-        self.pitchStart = _mbglMap->getPitch();
-
-        double pitch = fmin(self.pitchStart - (gestureTranslation.y / 2), 60);
-        
-        if (pitch > 0 && pitch < 60)
-        {
-            _mbglMap->setPitch(pitch);
-        }
-        
+        [self trackGestureEvent:MGLEventGesturePerspective forRecognizer:twoFingerDrag];
     }
-    else if (twoFingerDrag.state == UIGestureRecognizerStateChanged)
+    else */if (twoFingerDrag.state == UIGestureRecognizerStateBegan || twoFingerDrag.state == UIGestureRecognizerStateChanged)
     {
-        double pitch = fmin(self.pitchStart - (gestureTranslation.y / 2), 60);
+        double pitchNew = fmax(fmin(currentPitch - (gestureTranslation.y / slowdown), maxPitch), minPitch);
         
-        if (pitch > 0 && pitch < 60)
-        {
-           _mbglMap->setPitch(pitch);
-        }
+        _mbglMap->setPitch(pitchNew);
     }
     else if (twoFingerDrag.state == UIGestureRecognizerStateEnded || twoFingerDrag.state == UIGestureRecognizerStateCancelled)
     {
