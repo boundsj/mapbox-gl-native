@@ -1344,11 +1344,11 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
     
     CGPoint gestureTranslation = [twoFingerDrag translationInView:twoFingerDrag.view];
     
-    /*if (twoFingerDrag.state == UIGestureRecognizerStateBegan)
+    if (twoFingerDrag.state == UIGestureRecognizerStateBegan)
     {
-        [self trackGestureEvent:MGLEventGesturePerspective forRecognizer:twoFingerDrag];
+        [self trackGestureEvent:MGLEventGesturePitchStart forRecognizer:twoFingerDrag];
     }
-    else */if (twoFingerDrag.state == UIGestureRecognizerStateBegan || twoFingerDrag.state == UIGestureRecognizerStateChanged)
+    else if (twoFingerDrag.state == UIGestureRecognizerStateBegan || twoFingerDrag.state == UIGestureRecognizerStateChanged)
     {
         double pitchNew = fmax(fmin(currentPitch - (gestureTranslation.y / slowdown), maxPitch), minPitch);
         
