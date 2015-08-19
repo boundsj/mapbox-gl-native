@@ -1337,20 +1337,19 @@ std::chrono::steady_clock::duration secondsAsDuration(float duration)
     
     _mbglMap->cancelTransitions();
     
-    double currentPitch = _mbglMap->getPitch();
-    double minPitch = 0;
-    double maxPitch = 60.0;
-    double slowdown = 20.0;
-    
-    CGPoint gestureTranslation = [twoFingerDrag translationInView:twoFingerDrag.view];
-    
     if (twoFingerDrag.state == UIGestureRecognizerStateBegan)
     {
         [self trackGestureEvent:MGLEventGesturePitchStart forRecognizer:twoFingerDrag];
     }
     else if (twoFingerDrag.state == UIGestureRecognizerStateBegan || twoFingerDrag.state == UIGestureRecognizerStateChanged)
     {
-        double pitchNew = fmax(fmin(currentPitch - (gestureTranslation.y / slowdown), maxPitch), minPitch);
+        CGFloat gestureDistance = CGPoint([twoFingerDrag translationInView:twoFingerDrag.view]).y;
+        double currentPitch = _mbglMap->getPitch();
+        double minPitch = 0;
+        double maxPitch = 60.0;
+        double slowdown = 20.0;
+
+        double pitchNew = fmax(fmin(currentPitch - (gestureDistance / slowdown), maxPitch), minPitch);
         
         _mbglMap->setPitch(pitchNew);
     }
