@@ -20,7 +20,7 @@
 #include <mbgl/util/constants.hpp>
 #include <mbgl/util/image.hpp>
 
-#import "MapboxGL.h"
+#import "Mapbox.h"
 
 #import "NSBundle+MGLAdditions.h"
 #import "NSString+MGLAdditions.h"

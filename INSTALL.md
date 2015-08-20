@@ -104,7 +104,7 @@ This section is for people contributing to Mapbox GL directly in the context of 
    cp -Rf Templates/ ~/.appledoc
    ```
      
-1. Run `make ipackage`. The packaging script will produce the statically-linked `libMapboxGL.a`, `MapboxGL.bundle` for resources, a `Headers` folder, and a `Docs` folder with HTML API documentation.
+1. Run `make ipackage`. The packaging script will produce the statically-linked `libMapbox.a`, `Mapbox.bundle` for resources, a `Headers` folder, and a `Docs` folder with HTML API documentation.
 
 ### Test
 
@@ -121,7 +121,7 @@ Currently, until [#1437](https://github.com/mapbox/mapbox-gl-native/issues/1437)
     rm -f ../${ZIP}
     zip -r ../${ZIP} *
 
-1. Modify a custom `MapboxGL.podspec` to download this zip file. 
+1. Modify a custom `Mapbox-iOS-SDK.podspec` to download this zip file. 
 
     {...}
     
@@ -132,9 +132,9 @@ Currently, until [#1437](https://github.com/mapbox/mapbox-gl-native/issues/1437)
     
     {...}
 
-1. Update your app's `Podfile` to point to the `MapboxGL.podspec`. 
+1. Update your app's `Podfile` to point to the `Mapbox-iOS-SDK.podspec`. 
 
-    pod 'MapboxGL', :podspec => 'http://{...}/MapboxGL.podspec'
+    pod 'Mapbox-iOS-SDK', :podspec => 'http://{...}/Mapbox-iOS-SDK.podspec'
 
 1. Run `pod update` to grab the newly-built library. 
 
@@ -145,8 +145,8 @@ Currently, until [#1437](https://github.com/mapbox/mapbox-gl-native/issues/1437)
 1. Copy the contents of `build/ios/pkg/static` into your project. It should happen automatically, but ensure that:
 
    - `Headers` is in your *Header Search Paths* (`HEADER_SEARCH_PATHS`) build setting.
-   - `MapboxGL.bundle` is in your target's *Copy Bundle Resources* build phase.
-   - `libMapboxGL.a` is in your target's *Link Binary With Libraries* build phase.
+   - `Mapbox.bundle` is in your target's *Copy Bundle Resources* build phase.
+   - `libMapbox.a` is in your target's *Link Binary With Libraries* build phase.
 
 1. Add the following Cocoa framework dependencies to your target's *Link Binary With Libraries* build phase:
 
