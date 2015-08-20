@@ -56,7 +56,6 @@ class RasterShader;
 class SDFGlyphShader;
 class SDFIconShader;
 class DotShader;
-class GaussianShader;
 class CollisionBoxShader;
 
 struct ClipID;
@@ -207,6 +206,7 @@ private:
     float strata = 0;
     RenderPass pass = RenderPass::Opaque;
     const float strata_epsilon = 1.0f / (1 << 16);
+    Color background = {{ 0, 0, 0, 0 }};
 
 public:
     FrameHistory frameHistory;
@@ -226,7 +226,6 @@ public:
     std::unique_ptr<SDFGlyphShader> sdfGlyphShader;
     std::unique_ptr<SDFIconShader> sdfIconShader;
     std::unique_ptr<DotShader> dotShader;
-    std::unique_ptr<GaussianShader> gaussianShader;
     std::unique_ptr<CollisionBoxShader> collisionBoxShader;
 
     StaticVertexBuffer backgroundBuffer = {
@@ -251,7 +250,6 @@ public:
 
     VertexArrayObject coveringPlainArray;
     VertexArrayObject coveringRasterArray;
-    VertexArrayObject coveringGaussianArray;
 
     // Set up the tile boundary lines we're using to draw the tile outlines.
     StaticVertexBuffer tileBorderBuffer = {
