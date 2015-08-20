@@ -1631,10 +1631,6 @@ mbgl::LatLngBounds MGLLatLngBoundsFromCoordinateBounds(MGLCoordinateBounds coord
 {
     mbgl::vec2<double> pixel = _mbglMap->pixelForLatLng(MGLLatLngFromLocationCoordinate2D(coordinate));
 
-    // flip y coordinate for iOS view origin in top left
-    //
-    pixel.y = self.bounds.size.height - pixel.y;
-
     return [self convertPoint:CGPointMake(pixel.x, pixel.y) toView:view];
 }
 
