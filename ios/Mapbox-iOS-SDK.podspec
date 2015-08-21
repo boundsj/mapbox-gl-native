@@ -24,7 +24,7 @@ Pod::Spec.new do |m|
 
   m.preserve_paths = '**'
   m.source_files = 'Headers/*.h', 'MGLDummy.m'
-  m.resource_bundle = { 'Mapbox-iOS-SDK' => 'Mapbox.bundle/*' }
+  m.resource_bundle = { 'Mapbox' => 'Mapbox.bundle/*' }
   m.vendored_library = 'libMapbox.a'
   m.module_name = 'Mapbox'
 
