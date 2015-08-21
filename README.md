@@ -12,3 +12,7 @@ If you want to use products _based on_ Mapbox GL, check out:
 - [`node-mapbox-gl-native`](https://github.com/mapbox/node-mapbox-gl-native) — Node.js library for vector map rendering
 - [`react-native-mapbox-gl`](https://github.com/mapbox/react-native-mapbox-gl`) — React Native library for vector maps in apps
 - [`qmapboxgl`](https://github.com/tmpsantos/qmapboxgl) — Qt library for vector map rendering
+
+--
+
+See [`INSTALL.md`](./INSTALL.md) for development setup and install instructions, including dependencies. 
