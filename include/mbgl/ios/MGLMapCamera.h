@@ -1,4 +1,4 @@
-#import "MapboxGL.h"
+#import "Mapbox.h"
 
 #pragma once
 
